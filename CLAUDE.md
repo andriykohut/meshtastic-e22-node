@@ -8,7 +8,18 @@ This is a hardware design + firmware variant project for a custom [Meshtastic](h
 
 ## Build Setup
 
-The firmware files must be copied into a cloned Meshtastic firmware repository before building:
+All commands are wrapped in the `Makefile`. It clones the Meshtastic firmware into
+`build/firmware` (gitignored) and copies `variant.h` / `platformio-env.ini` into it before
+every build:
+
+```bash
+make build      # or: pio run -d build/firmware -e esp32s3-e22-433
+make upload     # or: pio run -d build/firmware -e esp32s3-e22-433 -t upload
+make monitor    # or: pio run -d build/firmware -e esp32s3-e22-433 -t monitor
+make ports      # or: pio device list — find the correct USB port
+```
+
+Equivalent manual steps, if you'd rather manage the firmware checkout yourself:
 
 ```bash
 git clone https://github.com/meshtastic/firmware.git
@@ -20,39 +31,37 @@ cp /path/to/this/repo/firmware/variant.h variants/esp32s3-e22-433/
 cat /path/to/this/repo/firmware/platformio-env.ini >> platformio.ini
 ```
 
-Then build, flash, and monitor via PlatformIO:
-
-```bash
-pio run -e esp32s3-e22-433 -t upload
-pio run -e esp32s3-e22-433 -t monitor
-pio device list   # find the correct USB port
-```
-
 Post-flash Meshtastic configuration:
 
 ```bash
-meshtastic --set lora.region EU_433
-meshtastic --set lora.modem_preset LONG_FAST
+make configure   # or: meshtastic --set lora.region EU_433 && meshtastic --set lora.modem_preset LONG_FAST
 ```
 
 ## Hardware Documentation Tools
 
-Regenerate the signal harness diagram from `hardware/harness.yml` (requires WireViz):
+Python tooling (WireViz, kiutils) is managed with [uv](https://github.com/astral-sh/uv) via
+`pyproject.toml`. Install dependencies into a local `.venv` with:
 
 ```bash
-wireviz hardware/harness.yml   # outputs SVG/PNG
+make setup   # or: uv sync
 ```
 
-Regenerate the KiCad schematic from `hardware/kicad/gen_kicad.py` (requires `pip install kiutils`):
+Regenerate the signal harness diagram from `hardware/harness.yml`:
 
 ```bash
-python3 hardware/kicad/gen_kicad.py
+make harness   # or: uv run wireviz hardware/harness.yml
+```
+
+Regenerate the KiCad schematic from `hardware/kicad/gen_kicad.py`:
+
+```bash
+make kicad   # or: cd hardware/kicad && uv run python3 gen_kicad.py
 ```
 
 Validate the firmware compiles cleanly after changes:
 
 ```bash
-grep -rn "TCXO_OPTIONAL\|GPS_EN_ACTIVE\|PIN_GPS_EN\|SX126X_RXEN" src/
+make validate   # or: grep -rn "TCXO_OPTIONAL\|GPS_EN_ACTIVE\|PIN_GPS_EN\|SX126X_RXEN" build/firmware/src/
 ```
 
 ## Architecture

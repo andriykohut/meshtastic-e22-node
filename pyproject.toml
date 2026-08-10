@@ -1,0 +1,12 @@
+[project]
+name = "meshtastic-e22-node"
+version = "0.1.0"
+description = "Hardware tooling requirements for the Meshtastic E22 node project"
+requires-python = ">=3.10"
+dependencies = [
+    "wireviz>=0.4",
+    "kiutils>=1.4",
+]
+
+[tool.uv]
+package = false

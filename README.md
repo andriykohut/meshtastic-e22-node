@@ -32,24 +32,19 @@ an external PA whose LNA side needs an RXEN pin driven by the MCU, and nothing p
 an arbitrary GPIO for that.
 
 ```bash
-git clone https://github.com/meshtastic/firmware.git
-cd firmware
-git submodule update --init --recursive
-
-mkdir -p variants/esp32s3-e22-433
-cp /path/to/this/repo/firmware/variant.h variants/esp32s3-e22-433/
-cat /path/to/this/repo/firmware/platformio-env.ini >> platformio.ini
-
-pio run -e esp32s3-e22-433 -t upload
-pio run -e esp32s3-e22-433 -t monitor
+make upload    # clones meshtastic/firmware into build/firmware, installs variant.h + the
+               # platformio env, then flashes
+make monitor
 ```
 
 Then set the region, or it won't transmit at all:
 
 ```bash
-meshtastic --set lora.region EU_433
-meshtastic --set lora.modem_preset LONG_FAST
+make configure   # meshtastic --set lora.region EU_433 / lora.modem_preset LONG_FAST
 ```
+
+See `Makefile` for the full set of targets (`build`, `upload`, `monitor`, `ports`, `configure`,
+`validate`, plus `setup`/`harness`/`kicad` for the Python hardware tooling below).
 
 ## Wiring
 
@@ -57,7 +52,8 @@ meshtastic --set lora.modem_preset LONG_FAST
 
 Signal harness above, power section in [docs/power-schematic.svg](docs/power-schematic.svg).
 The harness diagram is generated from `hardware/harness.yml` with
-[WireViz](https://github.com/wireviz/WireViz) — edit the YAML, run `wireviz harness.yml`.
+[WireViz](https://github.com/wireviz/WireViz) — edit the YAML, run `make harness` (uses
+[uv](https://github.com/astral-sh/uv) to manage the Python dependency, see `pyproject.toml`).
 
 Pin labels are signal names, not module pin numbers. Ebyte's numbering varies between
 revisions, so check your own datasheet before soldering.

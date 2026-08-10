@@ -20,5 +20,8 @@ __pycache__/
 *.pyc
 .venv/
 
+# Cloned Meshtastic firmware checkout (make build/upload/monitor/validate)
+build/
+
 # OS
 .DS_Store
