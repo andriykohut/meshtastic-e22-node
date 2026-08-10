@@ -1,0 +1,136 @@
+metadata:
+  title: Meshtastic node - signal harness
+  description: ESP32-S3-DevKitC-1 + E22-400M22S (SX1268) + GY-NEO8MV2 + SSD1306
+  notes: >
+    Labels are signal names, not module pin numbers. TXEN, DIO2 and DIO3 on the E22
+    are unconnected by design.
+
+options:
+  fontname: DejaVu Sans
+  bgcolor: WH
+  color_mode: full
+
+connectors:
+  MCU:
+    type: ESP32-S3-DevKitC-1
+    subtype: signal pins used
+    pinlabels:
+      - 3V3
+      - GND
+      - GPIO10
+      - GPIO12
+      - GPIO11
+      - GPIO13
+      - GPIO14
+      - GPIO15
+      - GPIO21
+      - GPIO17
+      - GPIO4
+      - GPIO5
+      - GPIO8
+      - GPIO9
+      - GPIO16
+      - GPIO6
+    notes: GPIO1 goes to the battery divider
+
+  LORA:
+    type: Ebyte E22-400M22S
+    subtype: SX1268 + PA/LNA
+    pinlabels: [VCC, GND, NSS, SCK, MOSI, MISO, BUSY, DIO1, NRST, RXEN]
+    notes: 470uF + 10uF + 100nF from VCC to GND, within 10 mm of the pad
+
+  GPS:
+    type: GY-NEO8MV2
+    subtype: u-blox NEO-8M
+    pinlabels: [VCC, GND, TX, RX]
+    notes: check the onboard LDO is not an AMS1117
+
+  OLED:
+    type: SSD1306 128x64
+    subtype: I2C, addr 0x3C
+    pinlabels: [VCC, GND, SDA, SCL]
+
+  BTN:
+    type: Pushbutton 12 mm
+    subtype: momentary, normally open
+    pinlabels: [A, B]
+
+  Q1:
+    type: AO3401A
+    subtype: P-channel MOSFET, SOT-23
+    pinlabels: [G, S, D]
+    notes: 100k from G to S; GPIO6 low = GPS powered
+
+cables:
+  W1:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.1
+    colors: [RD, BK, GN, YE, BU, VT, OG, WH, GY, PK]
+    wirelabels: [VCC, GND, NSS, SCK, MOSI, MISO, BUSY, DIO1, NRST, RXEN]
+
+  W2:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.1
+    colors: [BK, GN, YE]
+    wirelabels: [GND, GPS_TX, GPS_RX]
+
+  W3:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.05
+    colors: [RD]
+    wirelabels: [GPS_3V3_switched]
+
+  W4:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.05
+    colors: [RD, BN]
+    wirelabels: [3V3, GPS_EN]
+
+  W5:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.1
+    colors: [RD, BK, BU, VT]
+    wirelabels: [VCC, GND, SDA, SCL]
+
+  W6:
+    category: bundle
+    gauge: 30 AWG
+    length: 0.15
+    colors: [WH, BK]
+    wirelabels: [GPIO16, GND]
+
+connections:
+  -
+    - MCU: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    - W1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    - LORA: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+  -
+    - MCU: [2, 11, 12]
+    - W2: [1, 2, 3]
+    - GPS: [2, 3, 4]
+
+  -
+    - Q1: [3]
+    - W3: [1]
+    - GPS: [1]
+
+  -
+    - MCU: [1, 16]
+    - W4: [1, 2]
+    - Q1: [2, 1]
+
+  -
+    - MCU: [1, 2, 13, 14]
+    - W5: [1, 2, 3, 4]
+    - OLED: [1, 2, 3, 4]
+
+  -
+    - MCU: [15, 2]
+    - W6: [1, 2]
+    - BTN: [1, 2]

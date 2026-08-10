@@ -1,0 +1,118 @@
+Meshtastic node - intended netlist
+Compare against KiCad's ERC / netlist export to verify the schematic.
+
++3V3
+    U1.3V3
+    U2.VCC
+    U4.VCC
+    Q1.S
+    R3.2
+    C1.1
+    C2.1
+    C3.1
+    U6.VOUT
+
+GND
+    U1.GND
+    U2.GND
+    U3.GND
+    U4.GND
+    U5.OUT-
+    U5.IN-
+    U6.GND
+    C1.2
+    C2.2
+    C3.2
+    C4.2
+    R2.2
+    SW2.2
+
+VBAT
+    U5.OUT+
+    SW1.1
+
+VBAT_SW
+    SW1.2
+    U6.VIN
+    R1.1
+
+BATT+
+    BT1.+
+    BT2.+
+    U5.B+
+
+BATT-
+    BT1.-
+    BT2.-
+    U5.B-
+
+USB_5V
+    U5.IN+
+
+ADC_BATT
+    R1.2
+    R2.1
+    C4.1
+    U1.GPIO1
+
+LORA_NSS
+    U1.GPIO10
+    U2.NSS
+
+LORA_SCK
+    U1.GPIO12
+    U2.SCK
+
+LORA_MOSI
+    U1.GPIO11
+    U2.MOSI
+
+LORA_MISO
+    U1.GPIO13
+    U2.MISO
+
+LORA_BUSY
+    U1.GPIO14
+    U2.BUSY
+
+LORA_DIO1
+    U1.GPIO15
+    U2.DIO1
+
+LORA_NRST
+    U1.GPIO21
+    U2.NRST
+
+LORA_RXEN
+    U1.GPIO17
+    U2.RXEN
+
+I2C_SDA
+    U1.GPIO8
+    U4.SDA
+
+I2C_SCL
+    U1.GPIO9
+    U4.SCL
+
+GPS_TX
+    U1.GPIO4
+    U3.TX
+
+GPS_RX
+    U1.GPIO5
+    U3.RX
+
+GPS_EN
+    U1.GPIO6
+    Q1.G
+    R3.1
+
+GPS_3V3_SW
+    Q1.D
+    U3.VCC
+
+BTN
+    U1.GPIO16
+    SW2.1
+
