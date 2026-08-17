@@ -76,16 +76,15 @@ LORA_BUSY
     U2.BUSY
 
 LORA_DIO1
-    U1.GPIO15
+    U1.GPIO17
     U2.DIO1
 
 LORA_NRST
     U1.GPIO21
     U2.NRST
 
-LORA_RXEN
-    U1.GPIO17
-    U2.RXEN
+# RXEN (U2) is left unconnected, same as TXEN/DIO2/DIO3 — DIO2_AS_RF_SWITCH
+# handles RX/TX switching internally, so no GPIO drives it.
 
 I2C_SDA
     U1.GPIO8

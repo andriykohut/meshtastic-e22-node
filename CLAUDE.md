@@ -83,7 +83,7 @@ There is no runtime logic here. The repo has three parts:
 
 **SX1268, not SX1262.** The E22-400M22S uses the SX1268 (410–493 MHz variant). Using `USE_SX1262` in the firmware kills the radio silently.
 
-**TXEN is bonded internally.** The E22 module bonds TXEN to DIO2 internally. Only RXEN (GPIO17) needs MCU control; the TXEN pad on the module must be left unconnected.
+**TXEN and RXEN are both unconnected.** With `SX126X_DIO2_AS_RF_SWITCH` set, the E22 module drives its own RF switch off DIO2 for both TX and RX. Neither the TXEN nor the RXEN pad needs a GPIO — both are left unconnected on the module, and `SX126X_TXEN`/`SX126X_RXEN` are `RADIOLIB_NC`.
 
 **ADC channel is an enum, not a macro.** `ADC_CHANNEL` in `variant.h` must be `ADC_CHANNEL_0` (the ESP-IDF enum value), not a raw integer or IDF macro — the Meshtastic codebase expects the enum form.
 
