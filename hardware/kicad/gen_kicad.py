@@ -127,10 +127,9 @@ NETS = {
     "LORA_MOSI": [("U1", "GPIO11"), ("U2", "MOSI")],
     "LORA_MISO": [("U1", "GPIO13"), ("U2", "MISO")],
     "LORA_BUSY": [("U1", "GPIO14"), ("U2", "BUSY")],
-    "LORA_DIO1": [("U1", "GPIO17"), ("U2", "DIO1")],
+    "LORA_DIO1": [("U1", "GPIO15"), ("U2", "DIO1")],
     "LORA_NRST": [("U1", "GPIO21"), ("U2", "NRST")],
-    # RXEN (U2) is left unconnected — DIO2_AS_RF_SWITCH handles RX/TX switching
-    # internally, so no GPIO drives it. GPIO15 (U1) is likewise unused.
+    "LORA_RXEN": [("U1", "GPIO17"), ("U2", "RXEN")],
     "I2C_SDA":   [("U1", "GPIO8"), ("U4", "SDA")],
     "I2C_SCL":   [("U1", "GPIO9"), ("U4", "SCL")],
     "GPS_TX":    [("U1", "GPIO4"), ("U3", "TX")],

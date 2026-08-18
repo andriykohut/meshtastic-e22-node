@@ -2,10 +2,8 @@ metadata:
   title: Meshtastic node - signal harness
   description: ESP32-S3-DevKitC-1 + E22-400M22S (SX1268) + GY-NEO8MV2 + SSD1306
   notes: >
-    Labels are signal names, not module pin numbers. TXEN, DIO2, DIO3 and RXEN on
-    the E22 are unconnected by design — SX126X_DIO2_AS_RF_SWITCH handles RX/TX
-    switching internally, so no GPIO drives RXEN. GPIO15 is unused; DIO1 is on
-    GPIO17.
+    Labels are signal names, not module pin numbers. TXEN, DIO2 and DIO3 on the E22
+    are unconnected by design.
 
 options:
   fontname: DejaVu Sans
@@ -24,21 +22,22 @@ connectors:
       - GPIO11
       - GPIO13
       - GPIO14
-      - GPIO17
+      - GPIO15
       - GPIO21
+      - GPIO17
       - GPIO4
       - GPIO5
       - GPIO8
       - GPIO9
       - GPIO16
       - GPIO6
-    notes: GPIO1 goes to the battery divider; GPIO15 is unused
+    notes: GPIO1 goes to the battery divider
 
   LORA:
     type: Ebyte E22-400M22S
     subtype: SX1268 + PA/LNA
     pinlabels: [VCC, GND, NSS, SCK, MOSI, MISO, BUSY, DIO1, NRST, RXEN]
-    notes: 470uF + 10uF + 100nF from VCC to GND, within 10 mm of the pad. RXEN pad left unconnected.
+    notes: 470uF + 10uF + 100nF from VCC to GND, within 10 mm of the pad
 
   GPS:
     type: GY-NEO8MV2
@@ -67,8 +66,8 @@ cables:
     category: bundle
     gauge: 30 AWG
     length: 0.1
-    colors: [RD, BK, GN, YE, BU, VT, OG, WH, GY]
-    wirelabels: [VCC, GND, NSS, SCK, MOSI, MISO, BUSY, DIO1, NRST]
+    colors: [RD, BK, GN, YE, BU, VT, OG, WH, GY, PK]
+    wirelabels: [VCC, GND, NSS, SCK, MOSI, MISO, BUSY, DIO1, NRST, RXEN]
 
   W2:
     category: bundle
@@ -107,12 +106,12 @@ cables:
 
 connections:
   -
-    - MCU: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    - W1: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    - LORA: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    - MCU: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    - W1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    - LORA: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   -
-    - MCU: [2, 10, 11]
+    - MCU: [2, 11, 12]
     - W2: [1, 2, 3]
     - GPS: [2, 3, 4]
 
@@ -122,16 +121,16 @@ connections:
     - GPS: [1]
 
   -
-    - MCU: [1, 15]
+    - MCU: [1, 16]
     - W4: [1, 2]
     - Q1: [2, 1]
 
   -
-    - MCU: [1, 2, 12, 13]
+    - MCU: [1, 2, 13, 14]
     - W5: [1, 2, 3, 4]
     - OLED: [1, 2, 3, 4]
 
   -
-    - MCU: [14, 2]
+    - MCU: [15, 2]
     - W6: [1, 2]
     - BTN: [1, 2]
