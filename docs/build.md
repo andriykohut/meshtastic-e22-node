@@ -19,6 +19,16 @@ Set the converter to 3.30 V with a multimeter, output unloaded, before it touche
 These modules arrive at arbitrary trim and 5 V on that rail takes out the ESP32-S3, the E22 and
 the GPS in one go.
 
+Plugging in USB while `SW1` is on puts the TPS63020's 3.3 V output directly against the
+DevKitC's onboard LDO. Switching off before connecting USB (above) is the actual safeguard;
+if you want protection against forgetting that, add a Schottky diode from the TPS63020 output
+to the `3V3` pin, or cut the DevKitC's onboard-regulator output trace.
+
+GPIO5 (`GPS_TX_PIN`, the ESP32's UART TX into the GPS's RX) stays driven whenever the firmware
+is running, even with GPIO6 cutting GPS VCC. Idle-high TX into an unpowered NEO-8M backfeeds a
+few mA through the GPS's input ESD diodes. Only matters in duty-cycled/low-power builds — set
+GPIO5 to high-impedance input, or drive it low, whenever GPS power is switched off.
+
 ### Decoupling
 
 470 µF + 10 µF + 100 nF from VCC to GND, all within 10 mm of the E22's VCC pad. The electrolytic

@@ -14,7 +14,7 @@ setup:
 	$(UV) sync
 
 harness: setup
-	$(UV) run wireviz hardware/harness.yml
+	$(UV) run wireviz hardware/harness.yml -f ps -o docs -O harness
 
 kicad: setup
 	cd hardware/kicad && $(UV) --project ../.. run python3 gen_kicad.py
@@ -30,7 +30,7 @@ firmware-clone:
 firmware-install: firmware-clone
 	mkdir -p $(FIRMWARE_DIR)/variants/$(PIO_ENV)
 	cp firmware/variant.h $(FIRMWARE_DIR)/variants/$(PIO_ENV)/
-	grep -qxF "[env:$(PIO_ENV)]" $(FIRMWARE_DIR)/platformio.ini || cat firmware/platformio-env.ini >> $(FIRMWARE_DIR)/platformio.ini
+	cp firmware/platformio-env.ini $(FIRMWARE_DIR)/variants/$(PIO_ENV)/platformio.ini
 
 build: firmware-install
 	$(PIO) run -d $(FIRMWARE_DIR) -e $(PIO_ENV)

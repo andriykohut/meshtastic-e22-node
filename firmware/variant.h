@@ -3,6 +3,8 @@
 // Avoids GPIO0/3/45/46 (strapping), GPIO19/20 (native USB), GPIO26-37 (flash and
 // octal PSRAM on N8R8/N16R8 parts), GPIO38/48 (onboard RGB LED).
 
+#pragma once
+
 #define HAS_GPS 1
 
 // I2C — the SSD1306 is autodetected on the bus

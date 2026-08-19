@@ -30,6 +30,8 @@ The GPS breakout's regulator. If it's an **AMS1117-3.3** its 1.1 V dropout means
 ~2.2 V out, below the NEO-8M's 2.7 V minimum, and it will never get a fix. MIC5205 or HT7333
 are fine. If it is an AMS1117, bridge its input to output — it has no job on a clean 3.3 V rail.
 
+The TP4056's stock R3 sets a 1 A charge current: ~7-8 h for a full 2P pack (~7000 mAh).
+
 Also worth having: a second, commercial 433 MHz node. One node on its own shows you an empty
 node list and nothing else, so you can't tell a broken radio from an empty mesh. Check the band
 variant really covers 433 — plenty of "433/470 MHz" boards are matched for 470–510.

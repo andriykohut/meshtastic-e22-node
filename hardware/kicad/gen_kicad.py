@@ -8,6 +8,7 @@ If the labels come out mirrored top-to-bottom, flip `sy - py` to `sy + py` in th
 label loop near the bottom.
 """
 import uuid as U
+from pathlib import Path
 from kiutils.schematic import Schematic
 from kiutils.symbol import Symbol, SymbolPin
 from kiutils.items.common import Position, Stroke, Property, Effects, Font, Justify
@@ -16,6 +17,10 @@ from kiutils.items.schitems import SchematicSymbol, LocalLabel, SymbolInstance
 
 PITCH = 2.54
 NICK = "meshnode"
+
+HERE = Path(__file__).resolve().parent
+SCH_PATH = HERE / "meshtastic-node.kicad_sch"
+NETLIST_PATH = HERE.parent / "netlist.txt"
 
 
 def make_symbol(name, left_pins, right_pins, ref_prefix, value, half_w=12.7):
@@ -114,13 +119,14 @@ NETS = {
     "+3V3":      [("U1", "3V3"), ("U2", "VCC"), ("U4", "VCC"), ("Q1", "S"),
                   ("R3", "2"), ("C1", "1"), ("C2", "1"), ("C3", "1"), ("U6", "VOUT")],
     "GND":       [("U1", "GND"), ("U2", "GND"), ("U3", "GND"), ("U4", "GND"),
-                  ("U5", "OUT-"), ("U5", "IN-"), ("U6", "GND"), ("C1", "2"),
+                  ("U5", "OUT-"), ("U6", "GND"), ("C1", "2"),
                   ("C2", "2"), ("C3", "2"), ("C4", "2"), ("R2", "2"), ("SW2", "2")],
     "VBAT":      [("U5", "OUT+"), ("SW1", "1")],
     "VBAT_SW":   [("SW1", "2"), ("U6", "VIN"), ("R1", "1")],
     "BATT+":     [("BT1", "+"), ("BT2", "+"), ("U5", "B+")],
     "BATT-":     [("BT1", "-"), ("BT2", "-"), ("U5", "B-")],
     "USB_5V":    [("U5", "IN+")],
+    "USB_GND":   [("U5", "IN-")],
     "ADC_BATT":  [("R1", "2"), ("R2", "1"), ("C4", "1"), ("U1", "GPIO1")],
     "LORA_NSS":  [("U1", "GPIO10"), ("U2", "NSS")],
     "LORA_SCK":  [("U1", "GPIO12"), ("U2", "SCK")],
@@ -154,7 +160,7 @@ placement = {r: (n, x, y) for r, n, x, y, v in PLACED}
 uuids = {}
 
 for ref, name, x, y, val in PLACED:
-    inst_uuid = str(U.uuid4())
+    inst_uuid = str(U.uuid5(U.NAMESPACE_OID, f"symbol:{ref}"))
     uuids[ref] = inst_uuid
     ss = SchematicSymbol(
         libraryNickname=NICK, entryName=name, position=Position(x, y, 0),
@@ -175,7 +181,7 @@ for ref, name, x, y, val in PLACED:
                                   position=Position(x, y, 0),
                                   effects=Effects(font=Font(width=1.27, height=1.27), hide=True)))
     for pin_name in geoms[name]:
-        ss.pins[pin_name] = str(U.uuid4())
+        ss.pins[pin_name] = str(U.uuid5(U.NAMESPACE_OID, f"pin:{ref}:{pin_name}"))
     sch.schematicSymbols.append(ss)
     sch.symbolInstances.append(SymbolInstance(
         path=f"/{inst_uuid}", reference=ref, unit=1, value=val, footprint=""))
@@ -195,7 +201,7 @@ for net, pins in NETS.items():
                             justify=Justify(horizontally=just))))
         check.append((net, ref, pin_name, round(lx, 3), round(ly, 3)))
 
-sch.to_file("meshtastic-node.kicad_sch")
+sch.to_file(str(SCH_PATH))
 
 # ------------------------------------------------- self-check and netlist dump
 seen = {}
@@ -214,7 +220,7 @@ print(f"symbols: {len(PLACED)}  nets: {len(NETS)}  labelled pins: {len(check)}")
 print(f"coordinate collisions: {collisions}")
 print(f"pins with no net: {sorted(missing) if missing else 'none'}")
 
-with open("netlist.txt", "w") as f:
+with open(NETLIST_PATH, "w") as f:
     f.write("Meshtastic node - intended netlist\n")
     f.write("Compare against KiCad's ERC / netlist export to verify the schematic.\n\n")
     for net, pins in NETS.items():
